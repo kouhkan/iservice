@@ -49,19 +49,33 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     objects = BaseUserManager()
 
-    def __str__(self):
-        return self.username
-
     def is_staff(self):
         return self.role == self.UserRole.ADMIN
 
     def is_admin(self):
         return self.role == self.UserRole.ADMIN
 
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        unique_together = (
+            ("username", "email"),
+        )
+
 
 class Profile(models.Model):
+    class UserGender(models.TextChoices):
+        MALE = "MALE"
+        FEMALE = "FEMALE"
+        OTHER = "OTHER"
+
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    bio = models.CharField(max_length=1000, null=True, blank=True)
+    avatar = models.CharField(max_length=512, null=True, blank=True)
+    full_name = models.CharField(max_length=64, null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    city = models.CharField(max_length=128, null=True, blank=True)
+    gender = models.CharField(max_length=9, choices=UserGender.choices, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} >> {self.bio}"

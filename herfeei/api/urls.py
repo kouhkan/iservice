@@ -1,5 +1,5 @@
 from django.urls import path, include
 
 urlpatterns = [
-    # path('blog/', include(('herfeei.blog.urls', 'blog')))
+    path("users/", include(("herfeei.users.urls", "users"), namespace="users")),
 ]

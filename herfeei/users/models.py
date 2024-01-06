@@ -9,10 +9,12 @@ from django.utils.translation import gettext_lazy as _
 
 class BaseUserManager(BUM):
     def create_user(self, username, email=None, password=None):
-        if not email:
-            raise ValueError(_("Users must have an email address"))
+        if not username:
+            raise ValueError(_("Users must have an username that username is phone number"))
 
-        user = self.model(username=username, email=self.normalize_email(email.lower()))
+        user = self.model(username=username, email=self.normalize_email(email.lower())) \
+            if email \
+            else self.model(username=username)
 
         if password is not None:
             user.set_password(password)
@@ -24,7 +26,7 @@ class BaseUserManager(BUM):
 
         return user
 
-    def create_superuser(self, username, email, password=None):
+    def create_superuser(self, username, email=None, password=None):
         user = self.create_user(
             username=username,
             email=email,
@@ -43,11 +45,14 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         USER = "USER"
         EXPERT = "EXPERT"
 
-    username = models.CharField(_("Phone number"), max_length=14, unique=True, db_index=True)
+    username = models.CharField(_("Phone number"), max_length=10, unique=True, db_index=True)
     email = models.EmailField(_("email address"), unique=True, db_index=True, null=True, blank=True)
     role = models.CharField(max_length=9, choices=UserRole.choices, default=UserRole.USER)
 
     objects = BaseUserManager()
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = []
 
     def is_staff(self):
         return self.role == self.UserRole.ADMIN
@@ -78,4 +83,4 @@ class Profile(models.Model):
     gender = models.CharField(max_length=9, choices=UserGender.choices, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user} >> {self.bio}"
+        return self.user

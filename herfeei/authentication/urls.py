@@ -1,10 +1,14 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+from herfeei.authentication.apis.auth import LoginByUsernameView, VerifyAuthenticationView
+
 urlpatterns = [
-        path('jwt/', include(([
-            path('login/', TokenObtainPairView.as_view(),name="login"),
-            path('refresh/', TokenRefreshView.as_view(),name="refresh"),
-            path('verify/', TokenVerifyView.as_view(),name="verify"),
-            ])), name="jwt"),
+    path("", LoginByUsernameView.as_view(), name="login-by-username"),
+    path("verify/", VerifyAuthenticationView.as_view(), name="verify"),
+
+    path('jwt/', include(([
+        path('refresh/', TokenRefreshView.as_view(), name="refresh"),
+        path('verify/', TokenVerifyView.as_view(), name="verify"),
+    ])), name="jwt"),
 ]

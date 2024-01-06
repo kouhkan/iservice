@@ -1,10 +1,10 @@
-from django.db import models
-from herfeei.common.models import BaseModel
-
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager as BUM
 from django.contrib.auth.models import PermissionsMixin
+from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from herfeei.common.models import BaseModel
 
 
 class BaseUserManager(BUM):
@@ -57,7 +57,6 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.role == self.UserRole.ADMIN
 
-    @property
     def is_superuser(self):
         return self.role == self.UserRole.ADMIN
 

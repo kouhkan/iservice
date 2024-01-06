@@ -84,4 +84,4 @@ class Profile(models.Model):
     gender = models.CharField(max_length=9, choices=UserGender.choices, null=True, blank=True)
 
     def __str__(self):
-        return self.user
+        return f"{self.user}"

@@ -57,7 +57,8 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.role == self.UserRole.ADMIN
 
-    def is_admin(self):
+    @property
+    def is_superuser(self):
         return self.role == self.UserRole.ADMIN
 
     def __str__(self):

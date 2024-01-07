@@ -7,6 +7,8 @@ from herfeei.users.models import BaseUser, Address
 @transaction.atomic
 def create_address(*, user: BaseUser, title: str, details: str, default: bool = False, phone: str = None,
                    lat: float = None, long: float = None) -> Address:
+    if default:
+        Address.objects.filter(user=user).update(default=False)
     return Address.objects.create(user=user, title=title, slug=slugify(title), details=details, default=default,
                                   phone=phone, lat=lat, long=long)
 

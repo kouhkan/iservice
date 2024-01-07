@@ -39,4 +39,4 @@ def change_default_address(*, user: BaseUser, address_id: int) -> bool:
     Address.objects.filter(user=user).update(default=False)
     address.default = True
     address.save()
-    return True
+    return address

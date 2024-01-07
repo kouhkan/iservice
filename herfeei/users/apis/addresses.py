@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from herfeei.api.mixins import ApiAuthMixin
 from herfeei.users.models import Address
 from herfeei.users.selectors.addresses import get_user_addresses, get_user_address
-from herfeei.users.services.addresses import create_address
+from herfeei.users.services.addresses import create_address, update_address
 
 
 class CreateUserAddressView(ApiAuthMixin, APIView):
@@ -79,3 +79,34 @@ class GetUserAddressView(ApiAuthMixin, APIView):
         if not address:
             return Response(data={"message": "invalid id"}, status=status.HTTP_404_NOT_FOUND)
         return Response(self.OutputUserAddressSerializer(address).data)
+
+
+class UpdateUserAddressView(ApiAuthMixin, APIView):
+    class InputUpdateUserAddressSerializer(serializers.Serializer):
+        title = serializers.CharField(min_length=2, max_length=64, required=False)
+        details = serializers.CharField(min_length=8, max_length=512, required=False)
+        phone = serializers.CharField(min_length=10, max_length=10, required=False, allow_null=True)
+        default = serializers.BooleanField(default=False, required=False)
+        lat = serializers.DecimalField(max_digits=9, decimal_places=6, required=False, allow_null=True)
+        long = serializers.DecimalField(max_digits=9, decimal_places=6, required=False, allow_null=True)
+
+    class OutputUpdateUserAddressSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Address
+            fields = (
+                "id", "user", "title",
+                "slug", "details", "phone",
+                "default", "lat", "long",
+                "created_at", "updated_at"
+            )
+
+    def patch(self, request, id):
+        serializer = self.InputUpdateUserAddressSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        address = update_address(user=request.user, address_id=id, **serializer.validated_data)
+
+        if not address:
+            return Response(data={"message": "invalid id"}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(self.OutputUpdateUserAddressSerializer(address).data)

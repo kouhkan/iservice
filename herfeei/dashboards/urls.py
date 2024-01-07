@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenBlacklistView
 
+from herfeei.dashboards.apis.rules import GetRulesView
 from herfeei.dashboards.apis.users import UpdateUserAvatarView, UpdateUserProfileView
 from herfeei.users.apis.addresses import CreateUserAddressView, GetUserAddressesListView, GetUserAddressView, \
     UpdateUserAddressView, DeleteUserAddressView, ChangeDefaultUserAddressView
@@ -19,6 +20,7 @@ urlpatterns = [
             path("update/<int:id>/", UpdateUserAddressView.as_view(), name="update-user-addresses"),
             path("delete/<int:id>/", DeleteUserAddressView.as_view(), name="delete-user-addresses"),
             path("default/<int:id>/", ChangeDefaultUserAddressView.as_view(), name="change-default-user-addresses"),
-        ]))
+        ])),
+        path("rules/", GetRulesView.as_view(), name="get-rules"),
     ]))
 ]

@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from herfeei.api.mixins import ApiAuthMixin
 from herfeei.users.models import Address
-from herfeei.users.selectors.addresses import get_user_addresses
+from herfeei.users.selectors.addresses import get_user_addresses, get_user_address
 from herfeei.users.services.addresses import create_address
 
 
@@ -60,5 +60,22 @@ class GetUserAddressesListView(ApiAuthMixin, APIView):
 
     def get(self, request):
         addresses = get_user_addresses(user=request.user)
-        print(addresses)
         return Response(self.OutputUserAddressesListSerializer(addresses, many=True).data)
+
+
+class GetUserAddressView(ApiAuthMixin, APIView):
+    class OutputUserAddressSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Address
+            fields = (
+                "id", "user", "title",
+                "slug", "details", "phone",
+                "default", "lat", "long",
+                "created_at", "updated_at"
+            )
+
+    def get(self, request, id):
+        address = get_user_address(user=request.user, address_id=id)
+        if not address:
+            return Response(data={"message": "invalid id"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(self.OutputUserAddressSerializer(address).data)

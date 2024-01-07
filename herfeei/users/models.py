@@ -76,7 +76,7 @@ class Profile(models.Model):
         OTHER = "OTHER"
 
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    avatar = models.CharField(max_length=512, null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
     full_name = models.CharField(max_length=64, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=128, null=True, blank=True)

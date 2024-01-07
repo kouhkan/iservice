@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from herfeei.api.mixins import ApiAuthMixin
 from herfeei.users.models import Address
 from herfeei.users.selectors.addresses import get_user_addresses, get_user_address
-from herfeei.users.services.addresses import create_address, update_address
+from herfeei.users.services.addresses import create_address, update_address, delete_address, change_default_address
 
 
 class CreateUserAddressView(ApiAuthMixin, APIView):
@@ -110,3 +110,27 @@ class UpdateUserAddressView(ApiAuthMixin, APIView):
             return Response(data={"message": "invalid id"}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(self.OutputUpdateUserAddressSerializer(address).data)
+
+
+class DeleteUserAddressView(ApiAuthMixin, APIView):
+    def delete(self, request, id):
+        if not delete_address(user=request.user, address_id=id):
+            return Response(data={"message": "invalid id"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChangeDefaultUserAddressView(ApiAuthMixin, APIView):
+    class OutputChangeDefaultUserAddressSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Address
+            fields = (
+                "id", "user", "title",
+                "slug", "details", "phone",
+                "default", "lat", "long",
+                "created_at", "updated_at"
+            )
+
+    def patch(self, request, id):
+        if not (address := change_default_address(user=request.user, address_id=id)):
+            return Response(data={"message": "invalid id"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(self.OutputChangeDefaultUserAddressSerializer(address).data)

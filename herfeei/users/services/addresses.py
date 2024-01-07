@@ -16,10 +16,12 @@ def update_address(*, user: BaseUser, address_id: int, **kwargs) -> bool:
         return False
 
     for key, value in kwargs.items():
-        address[key] = value
+        if key == "title":
+            address.slug = slugify(value)
+        address.__setattr__(key, value)
     address.save()
 
-    return True
+    return address
 
 
 def delete_address(*, user: BaseUser, address_id: int) -> bool:

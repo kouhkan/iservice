@@ -89,7 +89,7 @@ class Profile(BaseModel):
 class Address(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name="addresses")
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=64, unique=True, db_index=True)
+    slug = models.SlugField(max_length=64, unique=True, db_index=True, allow_unicode=True)
     details = models.CharField(max_length=512)
     phone = models.CharField(max_length=10, null=True, blank=True)
     default = models.BooleanField(default=False)

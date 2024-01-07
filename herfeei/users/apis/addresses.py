@@ -1,9 +1,11 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from herfeei.api.mixins import ApiAuthMixin
 from herfeei.users.models import Address
+from herfeei.users.selectors.addresses import get_user_addresses
 from herfeei.users.services.addresses import create_address
 
 
@@ -26,6 +28,7 @@ class CreateUserAddressView(ApiAuthMixin, APIView):
                 "created_at", "updated_at"
             )
 
+    @extend_schema(request=InputUserAddressSerializer, responses=OutputUserAddressSerializer)
     def post(self, request):
         serializer = self.InputUserAddressSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -42,3 +45,20 @@ class CreateUserAddressView(ApiAuthMixin, APIView):
             return Response(self.OutputUserAddressSerializer(address).data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response(f"Error -> {ex}", status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetUserAddressesListView(ApiAuthMixin, APIView):
+    class OutputUserAddressesListSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Address
+            fields = (
+                "id", "user", "title",
+                "slug", "details", "phone",
+                "default", "lat", "long",
+                "created_at", "updated_at"
+            )
+
+    def get(self, request):
+        addresses = get_user_addresses(user=request.user)
+        print(addresses)
+        return Response(self.OutputUserAddressesListSerializer(addresses, many=True).data)

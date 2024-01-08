@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenBlacklistView
 
-from herfeei.dashboards.apis.faqs import FaqView, FaqCategoriesView
+from herfeei.dashboards.apis.faqs import FaqView, FaqCategoriesView, FaqDetailView
 from herfeei.dashboards.apis.rules import GetRulesView
 from herfeei.dashboards.apis.users import UpdateUserAvatarView, UpdateUserProfileView
 from herfeei.users.apis.addresses import CreateUserAddressView, GetUserAddressesListView, GetUserAddressView, \
@@ -24,8 +24,9 @@ urlpatterns = [
         ])),
         path("rules/", GetRulesView.as_view(), name="get-rules"),
         path("faqs/", include([
-            path("", FaqCategoriesView.as_view(), name="get-faq-categories"),
-            path("<slug:slug>/", FaqView.as_view(), name="get-faqs"),
+            path("", FaqView.as_view(), name="get-faqs"),
+            path("<slug:slug>/", FaqDetailView.as_view(), name="faq-details"),
+            path("categories/", FaqCategoriesView.as_view(), name="get-faq-categories"),
         ]), name="faqs"),
     ]))
 ]

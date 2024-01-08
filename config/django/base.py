@@ -19,6 +19,7 @@ LOCAL_APPS = [
     'herfeei.users.apps.UsersConfig',
     'herfeei.authentication.apps.AuthenticationConfig',
     'herfeei.dashboards.apps.DashboardsConfig',
+    'herfeei.services.apps.ServicesConfig',
 ]
 
 THIRD_PARTY_APPS = [

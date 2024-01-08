@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenBlacklistView
 
+from herfeei.dashboards.apis.contacts import ContactView
 from herfeei.dashboards.apis.faqs import FaqView, FaqCategoriesView, FaqDetailView
 from herfeei.dashboards.apis.rules import GetRulesView
 from herfeei.dashboards.apis.users import UpdateUserAvatarView, UpdateUserProfileView
@@ -28,5 +29,6 @@ urlpatterns = [
             path("<slug:slug>/", FaqDetailView.as_view(), name="faq-details"),
             path("categories/", FaqCategoriesView.as_view(), name="get-faq-categories"),
         ]), name="faqs"),
+        path("contacts/", ContactView.as_view(), name="contacts")
     ]))
 ]

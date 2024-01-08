@@ -6,4 +6,4 @@ from herfeei.dashboards.models import Rule
 
 
 def get_rules() -> List[QuerySet[Rule]]:
-    return Rule.objects.filter(enable=True)
+    return Rule.objects.filter(status=True)

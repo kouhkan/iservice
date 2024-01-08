@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenBlacklistView
 
-from herfeei.dashboards.apis.faqs import FaqView
+from herfeei.dashboards.apis.faqs import FaqView, FaqCategoriesView
 from herfeei.dashboards.apis.rules import GetRulesView
 from herfeei.dashboards.apis.users import UpdateUserAvatarView, UpdateUserProfileView
 from herfeei.users.apis.addresses import CreateUserAddressView, GetUserAddressesListView, GetUserAddressView, \

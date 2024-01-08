@@ -37,3 +37,13 @@ class Faq(BaseModel):
 
     def __str__(self):
         return self.title
+
+
+class Contact(BaseModel):
+    title = models.CharField(max_length=64)
+    slug = models.SlugField(max_length=32, db_index=True, unique=True, allow_unicode=True)
+    icon = models.ImageField(upload_to="icons/contacts/", null=True, blank=True)
+    content = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.title

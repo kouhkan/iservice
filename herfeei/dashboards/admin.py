@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from herfeei.dashboards.models import Rule, Faq, FaqCategory
+from herfeei.dashboards.models import Rule, Faq, FaqCategory, Contact
 
 
 @admin.register(Rule)
@@ -23,5 +23,13 @@ class FAQAdmin(admin.ModelAdmin):
 class FAQCategoryAdmin(admin.ModelAdmin):
     list_display = ("title", "slug", "created_at", "status")
     list_filter = ("status",)
+    list_per_page = 25
+    prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ("title", "content", "created_at")
+    search_fields = ("title", "content")
     list_per_page = 25
     prepopulated_fields = {"slug": ("title",)}

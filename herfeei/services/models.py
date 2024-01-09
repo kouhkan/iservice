@@ -55,4 +55,23 @@ class Service(BaseModel):
     rule = models.TextField()
 
     def __str__(self):
-        return f"{self.item}"
+        return f"{self.category}"
+
+
+class Question(BaseModel):
+    title = models.CharField(max_length=128)
+    slug = models.SlugField(max_length=64, unique=True, db_index=True, allow_unicode=True)
+    category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="questions")
+    step = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.title
+
+
+class QuestionItem(BaseModel):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="items")
+    content = models.CharField(max_length=128)
+    relation = models.ForeignKey(ServiceItem, on_delete=models.CASCADE, related_name="question_items")
+
+    def __str__(self):
+        return f"{self.question}"

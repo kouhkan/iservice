@@ -19,6 +19,7 @@ LOCAL_APPS = [
     'herfeei.users.apps.UsersConfig',
     'herfeei.authentication.apps.AuthenticationConfig',
     'herfeei.dashboards.apps.DashboardsConfig',
+    'herfeei.services.apps.ServicesConfig',
 ]
 
 THIRD_PARTY_APPS = [
@@ -31,6 +32,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'django_extensions',
     'storages',
+    'treebeard'
 ]
 
 INSTALLED_APPS = [

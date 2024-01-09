@@ -35,3 +35,24 @@ class ServiceCategory(MP_Node, BaseModel):
 
     def __str__(self):
         return self.title
+
+
+class ServiceItem(BaseModel):
+    title = models.CharField(max_length=64)
+    slug = models.SlugField(max_length=32, db_index=True, unique=True, allow_unicode=True)
+    start_range = models.PositiveIntegerField()
+    end_range = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.title
+
+
+class Service(BaseModel):
+    category = models.ForeignKey(ServiceCategory, on_delete=models.PROTECT, related_name="item")
+    items = models.ManyToManyField(ServiceItem)
+    introduce = models.TextField()
+    guide = models.TextField()
+    rule = models.TextField()
+
+    def __str__(self):
+        return f"{self.item}"

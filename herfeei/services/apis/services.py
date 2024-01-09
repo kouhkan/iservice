@@ -3,9 +3,11 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from herfeei.services.models import ServiceCategory, Service, Question
+from herfeei.api.mixins import ApiAuthMixin
+from herfeei.services.models import ServiceCategory, Service, Question, UserAnswer
 from herfeei.services.selectors.services import get_service_categories, get_children_service_category, get_service, \
     get_service_questions
+from herfeei.services.services.services import create_user_answers
 
 
 class GetServiceCategoryView(APIView):
@@ -61,4 +63,25 @@ class ServiceQuestionView(APIView):
     def get(self, request, slug):
         return Response(
             self.OutputServiceQuestionSerializer(get_service_questions(service_category_slug=slug), many=True).data
+        )
+
+
+class UserAnswerView(ApiAuthMixin, APIView):
+    class InputUserAnswerSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserAnswer
+            fields = ("answers",)
+
+    class OutputUserAnswerSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserAnswer
+            fields = ("user", "answers", "created_at")
+
+    @extend_schema(request=InputUserAnswerSerializer, responses=OutputUserAnswerSerializer)
+    def post(self, request):
+        serializer = self.InputUserAnswerSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(
+            self.OutputUserAnswerSerializer(
+                create_user_answers(user=request.user, answers=serializer.validated_data.get("answers"))).data
         )

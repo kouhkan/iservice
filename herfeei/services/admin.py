@@ -2,7 +2,8 @@ from django.contrib import admin
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
-from herfeei.services.models import City, Province, ServiceCategory, ServiceItem, Service, QuestionItem, Question
+from herfeei.services.models import City, Province, ServiceCategory, ServiceItem, Service, QuestionItem, Question, \
+    UserAnswer
 
 
 class CityTabularAdmin(admin.TabularInline):
@@ -61,6 +62,13 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(QuestionItem)
 class QuestionItemAdmin(admin.ModelAdmin):
-    list_display = ("question", "relation", "created_at")
+    list_display = ("question", "content", "relation", "created_at")
     search_fields = ("question",)
+    list_per_page = 25
+
+
+@admin.register(UserAnswer)
+class UserAnswerAdmin(admin.ModelAdmin):
+    list_display = ("user", "created_at")
+    search_fields = ("user",)
     list_per_page = 25

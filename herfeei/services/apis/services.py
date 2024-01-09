@@ -3,8 +3,9 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from herfeei.services.models import ServiceCategory, Service
-from herfeei.services.selectors.services import get_service_categories, get_children_service_category, get_service
+from herfeei.services.models import ServiceCategory, Service, Question
+from herfeei.services.selectors.services import get_service_categories, get_children_service_category, get_service, \
+    get_service_questions
 
 
 class GetServiceCategoryView(APIView):
@@ -46,4 +47,18 @@ class ServiceView(APIView):
     def get(self, request, slug):
         return Response(
             self.OutputServiceSerializer(get_service(service_category_slug=slug)).data
+        )
+
+
+class ServiceQuestionView(APIView):
+    class OutputServiceQuestionSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Question
+            fields = ("title", "slug", "category", "items")
+            depth = 2
+
+    @extend_schema(responses=OutputServiceQuestionSerializer)
+    def get(self, request, slug):
+        return Response(
+            self.OutputServiceQuestionSerializer(get_service_questions(service_category_slug=slug), many=True).data
         )

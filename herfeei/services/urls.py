@@ -1,10 +1,12 @@
 from django.urls import path, include
 
 from herfeei.services.apis.locations import GetProvincesView, GetCitiesView
-from herfeei.services.apis.services import GetServiceCategoryView, GetChildrenServiceCategoryView, ServiceView
+from herfeei.services.apis.services import GetServiceCategoryView, GetChildrenServiceCategoryView, ServiceView, \
+    ServiceQuestionView
 
 urlpatterns = [
     path("<str:slug>/", ServiceView.as_view(), name="get-services"),
+    path("<str:slug>/questions/", ServiceQuestionView.as_view(), name="get-service-questions"),
     path("categories/", GetServiceCategoryView.as_view(), name="get-service-categories"),
     path("categories/<str:slug>/", GetChildrenServiceCategoryView.as_view(), name="get-children-service-categories"),
 

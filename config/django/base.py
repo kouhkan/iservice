@@ -32,6 +32,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'django_extensions',
     'storages',
+    'treebeard'
 ]
 
 INSTALLED_APPS = [

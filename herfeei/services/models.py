@@ -48,8 +48,8 @@ class ServiceItem(BaseModel):
 
 
 class Service(BaseModel):
-    category = models.ForeignKey(ServiceCategory, on_delete=models.PROTECT, related_name="item")
-    items = models.ManyToManyField(ServiceItem)
+    category = models.ForeignKey(ServiceCategory, on_delete=models.PROTECT, related_name="service")
+    items = models.ManyToManyField(ServiceItem, related_name="prices")
     introduce = models.TextField()
     guide = models.TextField()
     rule = models.TextField()

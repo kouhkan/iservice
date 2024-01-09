@@ -170,6 +170,7 @@ from config.settings.celery import *  # noqa
 from config.settings.swagger import *  # noqa
 from config.settings.redis import *  # noqa
 from config.settings.minio import *  # noqa
+from config.settings.sms import *  # noqa
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 

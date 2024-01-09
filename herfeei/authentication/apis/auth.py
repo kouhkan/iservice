@@ -3,7 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.views import APIView, Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from herfeei.authentication.tasks import send_sms
+from herfeei.authentication.tasks import send_sms_task
 from herfeei.authentication.utils.redis_layer import get_auth_prepration_wait_time, prepare_authentication_token, \
     check_authentication_token, cleanup_token
 from herfeei.users.models import BaseUser
@@ -26,7 +26,7 @@ class LoginByUsernameView(APIView):
             )
 
         token = prepare_authentication_token(auth_key=serializer.validated_data.get("username"))
-        send_sms(serializer.validated_data.get("username"), token)
+        send_sms_task(serializer.validated_data.get("username"), token)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from treebeard.mp_tree import MP_Node
 
@@ -75,3 +76,13 @@ class QuestionItem(BaseModel):
 
     def __str__(self):
         return f"{self.question}"
+
+
+class UserAnswer(BaseModel):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="answers")
+    answers = models.ManyToManyField(QuestionItem, related_name="questions")
+
+    def __str__(self):
+        return f"{self.user}"
+
+

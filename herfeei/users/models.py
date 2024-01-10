@@ -75,7 +75,7 @@ class Profile(BaseModel):
         FEMALE = "FEMALE"
         OTHER = "OTHER"
 
-    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, related_name="profile")
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
     full_name = models.CharField(max_length=64, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)

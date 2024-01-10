@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.core.files.storage import default_storage
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.response import Response
@@ -14,12 +17,22 @@ class UpdateUserProfileView(ApiAuthMixin, APIView):
         gender = serializers.CharField(max_length=6, allow_null=True, allow_blank=True, required=False)
         city = serializers.CharField(max_length=128, allow_null=True, allow_blank=True, required=False)
         email = serializers.EmailField(max_length=128, allow_null=True, allow_blank=True, required=False)
-        username = serializers.CharField(min_length=10, max_length=10, allow_null=True, allow_blank=True, required=False)
+        username = serializers.CharField(min_length=10, max_length=10, allow_null=True, allow_blank=True,
+                                         required=False)
 
     class OutputUpdateProfileSerializer(serializers.ModelSerializer):
+        avatar_url = serializers.SerializerMethodField("secure_image_url")
+
         class Meta:
             model = Profile
-            fields = ("full_name", "date_of_birth", "gender", "city", "avatar")
+            fields = ("user", "full_name", "city", "date_of_birth", "avatar_url", "gender")
+
+        def secure_image_url(self, obj):
+            if not (avatar_key := obj.avatar.name):
+                return None
+            expires_in = timedelta(hours=1)
+            params = default_storage.get_object_parameters(avatar_key)
+            return default_storage.url(avatar_key, params, expire=expires_in.total_seconds())
 
     @extend_schema(request=InputUpdateProfileSerializer, responses=OutputUpdateProfileSerializer)
     def patch(self, request):
@@ -47,19 +60,18 @@ class UpdateUserAvatarView(ApiAuthMixin, APIView):
             fields = ("avatar",)
 
     class OutputUserAvatarSerializer(serializers.ModelSerializer):
-        avatar_url = serializers.SerializerMethodField("get_avatar_url")
+        avatar_url = serializers.SerializerMethodField("secure_image_url")
 
         class Meta:
             model = Profile
-            fields = ("avatar_url", "full_name", "gender", "date_of_birth")
+            fields = ("user", "full_name", "city", "date_of_birth", "avatar_url", "gender")
 
-        def get_avatar_url(self, obj):
-            if obj.avatar:
-                request = self.context.get("request")
-
-                if request:
-                    return request.build_absolute_uri(obj.avatar.url)
-            return None
+        def secure_image_url(self, obj):
+            if not (avatar_key := obj.avatar.name):
+                return None
+            expires_in = timedelta(hours=1)
+            params = default_storage.get_object_parameters(avatar_key)
+            return default_storage.url(avatar_key, params, expire=expires_in.total_seconds())
 
     def patch(self, request):
         serializer = self.InputUserAvatarSerializer(data=request.data)

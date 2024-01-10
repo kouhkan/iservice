@@ -6,6 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from herfeei.authentication.tasks import send_sms_task
 from herfeei.authentication.utils.redis_layer import get_auth_prepration_wait_time, prepare_authentication_token, \
     check_authentication_token, cleanup_token
+from herfeei.notifications.services.notifications import create_welcome_notification
 from herfeei.users.models import BaseUser
 from herfeei.users.services.users import register
 
@@ -64,6 +65,7 @@ class VerifyAuthenticationView(APIView):
         try:
             user = register(username=serializer.validated_data.get("username"))
             cleanup_token(serializer.validated_data.get("username"))
+            create_welcome_notification(user=user)
         except Exception as ex:
             return Response(
                 f"Database Error {ex}",

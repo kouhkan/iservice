@@ -20,7 +20,8 @@ class ProfileView(ApiAuthMixin, APIView):
             fields = ("user", "full_name", "city", "date_of_birth", "avatar_url", "gender")
 
         def secure_image_url(self, obj):
-            avatar_key = obj.avatar.name
+            if not (avatar_key := obj.avatar.name):
+                return None
             expires_in = timedelta(hours=1)
             params = default_storage.get_object_parameters(avatar_key)
             return default_storage.url(avatar_key, params, expire=expires_in.total_seconds())

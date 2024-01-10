@@ -20,6 +20,7 @@ LOCAL_APPS = [
     'herfeei.authentication.apps.AuthenticationConfig',
     'herfeei.dashboards.apps.DashboardsConfig',
     'herfeei.services.apps.ServicesConfig',
+    'herfeei.notifications.apps.NotificationsConfig',
 ]
 
 THIRD_PARTY_APPS = [

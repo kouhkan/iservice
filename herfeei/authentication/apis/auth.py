@@ -65,7 +65,6 @@ class VerifyAuthenticationView(APIView):
         try:
             user = register(username=serializer.validated_data.get("username"))
             cleanup_token(serializer.validated_data.get("username"))
-            create_welcome_notification(user=user)
         except Exception as ex:
             return Response(
                 f"Database Error {ex}",

@@ -69,6 +69,20 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         )
 
 
+class UserAvatar(BaseModel):
+    class AvatarType(models.TextChoices):
+        USER = "USER"
+        EXPERT = "EXPERT"
+
+    title = models.CharField(max_length=24, null=True, blank=True)
+    slug = models.SlugField(max_length=24, unique=True, db_index=True, allow_unicode=True, null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    type = models.CharField(max_length=6, choices=AvatarType.choices, default=AvatarType.USER)
+
+    def __str__(self):
+        return f"{self.id}"
+
+
 class Profile(BaseModel):
     class UserGender(models.TextChoices):
         MALE = "MALE"
@@ -76,7 +90,7 @@ class Profile(BaseModel):
         OTHER = "OTHER"
 
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, related_name="profile")
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    avatar = models.ForeignKey(UserAvatar, on_delete=models.PROTECT, null=True, blank=True, related_name="profile")
     full_name = models.CharField(max_length=64, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=128, null=True, blank=True)

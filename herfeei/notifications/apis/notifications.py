@@ -1,11 +1,12 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from herfeei.api.mixins import ApiAuthMixin
 from herfeei.notifications.models import UserNotification
 from herfeei.notifications.selectors.notifications import get_user_notifications
+from herfeei.notifications.services.notifications import change_to_read_notification
 
 
 class GetUserNotificationsView(ApiAuthMixin, APIView):
@@ -16,7 +17,7 @@ class GetUserNotificationsView(ApiAuthMixin, APIView):
     class OutputGetUserNotificationSerializer(serializers.ModelSerializer):
         class Meta:
             model = UserNotification
-            fields = ("notification", "options", "status", "created_at")
+            fields = ("id", "notification", "options", "status", "created_at")
             depth = 1
 
     def apply_filter(self, queryset, filters):
@@ -35,3 +36,10 @@ class GetUserNotificationsView(ApiAuthMixin, APIView):
         return Response(
             self.OutputGetUserNotificationSerializer(queryset, many=True).data
         )
+
+
+class ReadUserNotificationView(ApiAuthMixin, APIView):
+    def patch(self, request, id):
+        if not change_to_read_notification(user=request.user, notification_id=id):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)

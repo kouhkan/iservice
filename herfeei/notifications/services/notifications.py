@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from herfeei.notifications.models import UserNotification, Notification
+from herfeei.notifications.models import UserNotification, BaseNotification
 from herfeei.users.models import BaseUser
 
 
@@ -8,9 +8,9 @@ def create_base_notification(
         *,
         title: str,
         description: str,
-        level: Notification.NotificationLevel = Notification.NotificationLevel.INFO
-) -> Notification:
-    return Notification.objects.create(title=title, slug=slugify(title), description=description, level=level)
+        level: BaseNotification.NotificationLevel = BaseNotification.NotificationLevel.INFO
+) -> BaseNotification:
+    return BaseNotification.objects.create(title=title, slug=slugify(title), description=description, level=level)
 
 
 def create_welcome_notification(*, user: BaseUser) -> UserNotification:

@@ -21,6 +21,7 @@ LOCAL_APPS = [
     'herfeei.dashboards.apps.DashboardsConfig',
     'herfeei.services.apps.ServicesConfig',
     'herfeei.notifications.apps.NotificationsConfig',
+    'herfeei.home.apps.HomeConfig',
 ]
 
 THIRD_PARTY_APPS = [

@@ -13,12 +13,18 @@ services:
 
   rabbitmq:
     image: "rabbitmq:alpine"
-    container_name: rabbitmq
+    container_name: rabbit
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
       timeout: 30s
       retries: 3
+
+  redis:
+    image: redis:7.2
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   django:
     build:
@@ -71,3 +77,29 @@ services:
       - db
       - rabbitmq
     restart: on-failure
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
+    container_name: nginx
+    depends_on:
+      - django
+    ports:
+      - "80:80"
+    restart: on-failure
+    volumes:
+      - ./staticfiles:/staticfiles
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio/data:/data
+    environment:
+      MINIO_ACCESS_KEY: TYOUldgc5EKHGFNd5xqi
+      MINIO_SECRET_KEY: pHKM5d18KInqAE95AxcUwqVUBa3gQoKVZDv3tjvF
+    command: server /data --console-address ":9001"

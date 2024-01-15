@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from herfeei.api.mixins import ApiAuthMixin
-from herfeei.users.models import Profile
+from herfeei.users.models import Profile, UserAvatar
+from herfeei.users.services.users import get_user_avatar_image
 
 
 class UpdateUserProfileView(ApiAuthMixin, APIView):
@@ -54,30 +55,28 @@ class UpdateUserProfileView(ApiAuthMixin, APIView):
 
 
 class UpdateUserAvatarView(ApiAuthMixin, APIView):
-    class InputUserAvatarSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Profile
-            fields = ("avatar",)
+    class InputUserAvatarSerializer(serializers.Serializer):
+        img_id = serializers.IntegerField()
 
     class OutputUserAvatarSerializer(serializers.ModelSerializer):
-        avatar_url = serializers.SerializerMethodField("secure_image_url")
+        class AvatarSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = UserAvatar
+                fields = ("title", "slug", "avatar")
+
+        avatar = AvatarSerializer(read_only=True)
 
         class Meta:
             model = Profile
-            fields = ("user", "full_name", "city", "date_of_birth", "avatar_url", "gender")
-
-        def secure_image_url(self, obj):
-            if not (avatar_key := obj.avatar.name):
-                return None
-            expires_in = timedelta(hours=1)
-            params = default_storage.get_object_parameters(avatar_key)
-            return default_storage.url(avatar_key, params, expire=expires_in.total_seconds())
+            fields = ("user", "full_name", "city", "date_of_birth", "avatar", "gender")
 
     def patch(self, request):
         serializer = self.InputUserAvatarSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        request.user.profile.avatar = serializer.validated_data.get("avatar", request.user.profile.avatar)
+        if not (avatar := get_user_avatar_image(img_id=serializer.validated_data.get("img_id"))):
+            return Response({"msg": "invalid avatar"}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.profile.avatar = avatar
         request.user.profile.save()
 
         return Response(self.OutputUserAvatarSerializer(request.user.profile, context={"request": request}).data)

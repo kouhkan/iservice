@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 
 from herfeei.common.models import BaseModel
+from herfeei.users.models import BaseUser
 
 
 class Expert(BaseModel):
@@ -51,3 +54,9 @@ class Bookmark(BaseModel):
 
     def __str__(self):
         return f"{self.user}"
+
+
+@receiver(post_save, sender=Expert)
+def change_user_role(sender, instance, **kwargs):
+    instance.user.role = BaseUser.UserRole.EXPERT
+    instance.user.save()

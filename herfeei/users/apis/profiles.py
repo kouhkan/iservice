@@ -24,9 +24,7 @@ class ProfileView(ApiAuthMixin, APIView):
             if not obj.avatar:
                 return None
 
-            print(obj)
-
-            if not (avatar_key := obj.avatar.name):
+            if not (avatar_key := obj.avatar.title):
                 return None
             expires_in = timedelta(hours=1)
             params = default_storage.get_object_parameters(avatar_key)

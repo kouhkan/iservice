@@ -24,6 +24,8 @@ class Order(BaseModel):
     now = models.DateTimeField(default=timezone.now, null=True, blank=True)
     order_track_id = models.CharField(max_length=10, default=generate_track_token, unique=True, db_index=True)
     is_complete = models.BooleanField(default=False)
+    email_order = models.BooleanField(default=False)
+    user_address = models.ForeignKey("users.Address", on_delete=models.PROTECT, related_name="orders")
 
     def __str__(self):
         return f"{self.user_answer.user}"

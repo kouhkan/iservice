@@ -76,7 +76,7 @@ class QuestionItem(BaseModel):
     relation = models.ForeignKey(ServiceItem, on_delete=models.CASCADE, related_name="question_items")
 
     def __str__(self):
-        return f"{self.question}"
+        return f"{self.content}"
 
 
 class UserAnswer(BaseModel):

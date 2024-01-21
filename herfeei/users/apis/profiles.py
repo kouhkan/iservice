@@ -21,6 +21,11 @@ class ProfileView(ApiAuthMixin, APIView):
             fields = ("user", "full_name", "city", "date_of_birth", "avatar_url", "gender")
 
         def secure_image_url(self, obj):
+            if not obj.avatar:
+                return None
+
+            print(obj)
+
             if not (avatar_key := obj.avatar.name):
                 return None
             expires_in = timedelta(hours=1)

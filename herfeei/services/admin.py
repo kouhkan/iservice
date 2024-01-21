@@ -69,6 +69,6 @@ class QuestionItemAdmin(admin.ModelAdmin):
 
 @admin.register(UserAnswer)
 class UserAnswerAdmin(admin.ModelAdmin):
-    list_display = ("user", "created_at")
+    list_display = ("user", "id", "created_at")
     search_fields = ("user",)
     list_per_page = 25

@@ -29,6 +29,7 @@ class ServiceCategory(MP_Node, BaseModel):
     title = models.CharField(max_length=128, db_index=True)
     slug = models.SlugField(max_length=128, db_index=True, unique=True, allow_unicode=True)
     description = models.CharField(max_length=512, null=True, blank=True)
+    image = models.ImageField(upload_to="categories/image/", null=True, blank=True)
     is_public = models.BooleanField(default=True)
 
     class Meta:
@@ -75,7 +76,7 @@ class QuestionItem(BaseModel):
     relation = models.ForeignKey(ServiceItem, on_delete=models.CASCADE, related_name="question_items")
 
     def __str__(self):
-        return f"{self.question}"
+        return f"{self.content}"
 
 
 class UserAnswer(BaseModel):

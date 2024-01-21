@@ -22,6 +22,10 @@ LOCAL_APPS = [
     'herfeei.services.apps.ServicesConfig',
     'herfeei.notifications.apps.NotificationsConfig',
     'herfeei.home.apps.HomeConfig',
+    'herfeei.comments.apps.CommentsConfig',
+    'herfeei.experts.apps.ExpertsConfig',
+    'herfeei.discounts.apps.DiscountsConfig',
+    'herfeei.orders.apps.OrdersConfig',
 ]
 
 THIRD_PARTY_APPS = [

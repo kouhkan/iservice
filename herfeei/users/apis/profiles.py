@@ -45,7 +45,10 @@ class GetUserAvatarsView(ApiAuthMixin, APIView):
             fields = ("id", "title", "slug", "avatar_url")
 
         def secure_image_url(self, obj):
-            if not (avatar_key := obj.avatar.name):
+            if not obj.avatar:
+                return None
+
+            if not (avatar_key := obj.avatar.title):
                 return None
             expires_in = timedelta(hours=1)
             params = default_storage.get_object_parameters(avatar_key)

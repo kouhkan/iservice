@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from herfeei.users.models import BaseUser, Profile, UserAvatar
+from herfeei.users.models import BaseUser, Profile, UserAvatar, Address
 
 
 @admin.register(BaseUser)
@@ -20,4 +20,11 @@ class ProfileAdmin(admin.ModelAdmin):
 class UserAvatarAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "avatar", "created_at")
     list_per_page = 25
+    prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(Address)
+class UserAddressAdmin(admin.ModelAdmin):
+    list_display = ("user", "title", "default")
+    search_fields = ("user", "title")
     prepopulated_fields = {"slug": ("title",)}

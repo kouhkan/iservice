@@ -29,6 +29,7 @@ class ServiceCategory(MP_Node, BaseModel):
     title = models.CharField(max_length=128, db_index=True)
     slug = models.SlugField(max_length=128, db_index=True, unique=True, allow_unicode=True)
     description = models.CharField(max_length=512, null=True, blank=True)
+    image = models.ImageField(upload_to="categories/image/", null=True, blank=True)
     is_public = models.BooleanField(default=True)
 
     class Meta:

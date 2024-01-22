@@ -9,16 +9,28 @@ from herfeei.users.models import BaseUser
 
 
 class Expert(BaseModel):
+    class ExpertStatus(models.TextChoices):
+        ACTIVE = "ACTIVE"
+        BAN = "BAN"
+
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="expert")
-    category = models.ForeignKey("services.ServiceCategory", on_delete=models.CASCADE)
     province = models.ForeignKey("services.Province", on_delete=models.CASCADE)
     city = models.ForeignKey("services.City", on_delete=models.CASCADE)
     license = models.ImageField(upload_to="experts/licenses/", null=True, blank=True)
     bad_background = models.BooleanField(default=False)
     bad_background_license = models.ImageField(upload_to="experts/bad_backgrounds/", null=True, blank=True)
+    status = models.CharField(max_length=8, choices=ExpertStatus.choices, default=ExpertStatus.ACTIVE)
 
     def __str__(self):
         return f"{self.user}"
+
+
+class ExpertSkill(BaseModel):
+    expert = models.OneToOneField(Expert, on_delete=models.CASCADE, related_name="skills")
+    category = models.ManyToManyField("services.ServiceCategory")
+
+    def __str__(self):
+        return f"{self.expert}"
 
 
 class AvailableTimeExpert(BaseModel):
@@ -33,6 +45,9 @@ class AvailableTimeExpert(BaseModel):
 
 class Warranty(BaseModel):
     expert = models.OneToOneField(Expert, on_delete=models.CASCADE, related_name="warranty")
+
+    class Meta:
+        verbose_name_plural = "Warranties"
 
     def __str__(self):
         return f"{self.expert}"
@@ -51,6 +66,11 @@ class Sample(BaseModel):
 class Bookmark(BaseModel):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="bookmark")
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (
+            ("user", "expert"),
+        )
 
     def __str__(self):
         return f"{self.user}"

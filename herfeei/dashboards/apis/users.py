@@ -29,7 +29,10 @@ class UpdateUserProfileView(ApiAuthMixin, APIView):
             fields = ("user", "full_name", "city", "date_of_birth", "avatar_url", "gender")
 
         def secure_image_url(self, obj):
-            if not (avatar_key := obj.avatar.name):
+            if not obj.avatar:
+                return None
+
+            if not (avatar_key := obj.avatar.title):
                 return None
             expires_in = timedelta(hours=1)
             params = default_storage.get_object_parameters(avatar_key)

@@ -18,14 +18,17 @@ class Order(BaseModel):
                                   blank=True)
     discount = models.ForeignKey("discounts.Discount", on_delete=models.SET_NULL, related_name="orders", null=True,
                                  blank=True)
-    expert = models.ForeignKey("experts.Expert", on_delete=models.PROTECT, related_name="orders")
-    service = models.ForeignKey("services.Service", on_delete=models.PROTECT, related_name="orders")
+    expert = models.ForeignKey("experts.Expert", on_delete=models.PROTECT, related_name="orders", null=True, blank=True)
+    service = models.ForeignKey("services.Service", on_delete=models.PROTECT, related_name="orders", null=True,
+                                blank=True)
     order_date_time = models.ManyToManyField("OrderDateTime")
     now = models.DateTimeField(default=timezone.now, null=True, blank=True)
-    order_track_id = models.CharField(max_length=10, default=generate_track_token, unique=True, db_index=True)
+    order_track_id = models.CharField(max_length=10, default=generate_track_token, unique=True, db_index=True,
+                                      null=True, blank=True)
     is_complete = models.BooleanField(default=False)
     email_order = models.BooleanField(default=False)
-    user_address = models.ForeignKey("users.Address", on_delete=models.PROTECT, related_name="orders")
+    user_address = models.ForeignKey("users.Address", on_delete=models.PROTECT, related_name="orders", null=True,
+                                     blank=True)
 
     def __str__(self):
         return f"{self.user_answer.user}"

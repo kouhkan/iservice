@@ -14,7 +14,7 @@ class RedisSingleton:
         if not cls._instance:
             cls._instance = super(RedisSingleton, cls).__new__(cls, *args, **kwargs)
             cls._instance.connection = redis.StrictRedis.from_url(
-              settings.REDIS_LOCATION
+                settings.REDIS_LOCATION
             )
         return cls._instance
 
@@ -40,7 +40,7 @@ def get_auth_prepration_wait_time(auth_key: str):
 
 def prepare_authentication_token(auth_key: str):
     """Generate Random Authentication Token and Store in Redis."""
-    token = f"{randint(100000, 999999)}"
+    token = "111111" if settings.DEBUG else f"{randint(100000, 999999)}"
     redis.set(generate_token_key(auth_key), token, ex=timedelta(seconds=60))
     return token
 

@@ -9,8 +9,11 @@ urlpatterns = [
     path("<str:slug>/", ServiceView.as_view(), name="get-services"),
     path("<str:slug>/questions/", ServiceQuestionView.as_view(), name="get-service-questions"),
 
-    path("categories/", GetServiceCategoryView.as_view(), name="get-service-categories"),
-    path("categories/<str:slug>/", GetChildrenServiceCategoryView.as_view(), name="get-children-service-categories"),
+    path("categories/", include([
+        path("l/", GetServiceCategoryView.as_view(), name="get-service-categories"),
+        path("<str:slug>/", GetChildrenServiceCategoryView.as_view(),
+             name="get-children-service-categories"),
+    ]), name="categories"),
 
     path("locations/", include([
         path("p/", GetProvincesView.as_view(), name="get-provinces"),

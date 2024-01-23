@@ -5,8 +5,12 @@ from herfeei.common.models import BaseModel
 
 
 class Discount(BaseModel):
-    user = models.ForeignKey("users.BaseUser", on_delete=models.CASCADE, related_name="discounts", null=True, blank=True)
-    service_category = models.ForeignKey("services.ServiceCategory", on_delete=models.CASCADE, related_name="discounts", null=True, blank=True)
+    user = models.ForeignKey(
+        "users.BaseUser", on_delete=models.CASCADE, related_name="discounts", null=True, blank=True
+    )
+    service_category = models.ForeignKey(
+        "services.ServiceCategory", on_delete=models.CASCADE, related_name="discounts", null=True, blank=True
+    )
     title = models.CharField(max_length=64)
     slug = models.SlugField(max_length=64, unique=True, db_index=True, allow_unicode=True)
     description = models.CharField(max_length=512, null=True, blank=True)
@@ -17,6 +21,9 @@ class Discount(BaseModel):
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField()
 
+    @property
+    def expired(self) -> bool:
+        return timezone.now().date() < self.start_date or timezone.now().date() >= self.end_date
+
     def __str__(self):
         return self.title
-

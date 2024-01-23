@@ -23,6 +23,7 @@ class ProvinceAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(TreeAdmin):
+    list_display = ("title", "slug", "is_public", "status")
     form = movenodeform_factory(ServiceCategory)
     prepopulated_fields = {"slug": ("title",)}
 

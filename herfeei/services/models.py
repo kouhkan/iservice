@@ -26,11 +26,17 @@ class City(BaseModel):
 
 
 class ServiceCategory(MP_Node, BaseModel):
+    class ServiceCategoryStatus(models.TextChoices):
+        ENABLE = "ENABLE"
+        DISABLE = "DISABLE"
+
     title = models.CharField(max_length=128, db_index=True)
     slug = models.SlugField(max_length=128, db_index=True, unique=True, allow_unicode=True)
     description = models.CharField(max_length=512, null=True, blank=True)
     image = models.ImageField(upload_to="categories/image/", null=True, blank=True)
     is_public = models.BooleanField(default=True)
+    status = models.CharField(max_length=10, choices=ServiceCategoryStatus.choices,
+                              default=ServiceCategoryStatus.ENABLE)
 
     class Meta:
         verbose_name_plural = "Service Categories"
@@ -85,5 +91,3 @@ class UserAnswer(BaseModel):
 
     def __str__(self):
         return f"{self.user}"
-
-

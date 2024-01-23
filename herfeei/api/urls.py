@@ -9,6 +9,6 @@ urlpatterns = [
     path("home/", include(("herfeei.home.urls", "home"), namespace="home")),
     path("orders/", include(("herfeei.orders.urls", "orders"), namespace="orders")),
     path("experts/", include(("herfeei.experts.urls", "experts"), namespace="experts")),
-    # path("comments/", include(("herfeei.comments.urls", "comments"), namespace="comments")),
+    path("comments/", include(("herfeei.comments.urls", "comments"), namespace="comments")),
     # path("discounts/", include(("herfeei.discounts.urls", "discounts"), namespace="discounts")),
 ]

@@ -24,7 +24,7 @@ class MostRatedExpertsView(ApiAuthMixin, APIView):
     class OutputMostRatedExpertsView(serializers.ModelSerializer):
         class Meta:
             model = Expert
-            fields = ("user", "category", "province", "city", "license", "bad_background")
+            fields = ("user", "skills", "province", "city", "license", "bad_background")
 
     @extend_schema(responses=OutputMostRatedExpertsView)
     def get(self, request, category_slug):

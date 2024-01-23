@@ -5,9 +5,9 @@ from herfeei.experts.models import Expert, Bookmark, Sample, AvailableTimeExpert
 
 @admin.register(Expert)
 class ExpertAdmin(admin.ModelAdmin):
-    list_display = ("user", "province", "city", "status")
+    list_display = ("user", "expert_code", "province", "city", "status")
     list_filter = ("province", "status")
-    search_fields = ("user", "province", "city")
+    search_fields = ("user", "province", "city", "expert_code")
     list_editable = ("status",)
     list_per_page = 25
     autocomplete_fields = ("user",)

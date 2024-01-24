@@ -7,7 +7,10 @@ from herfeei.common.models import BaseModel
 
 class NotificationCategory(MP_Node, BaseModel):
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=64, db_index=True, unique=True, allow_unicode=True)
+    slug = models.SlugField(max_length=64,
+                            db_index=True,
+                            unique=True,
+                            allow_unicode=True)
 
     class Meta:
         verbose_name_plural = "Notification Categories"
@@ -17,6 +20,7 @@ class NotificationCategory(MP_Node, BaseModel):
 
 
 class BaseNotification(BaseModel):
+
     class NotificationLevel(models.TextChoices):
         DANGER = "DANGER"
         SUCCESS = "SUCCESS"
@@ -24,9 +28,16 @@ class BaseNotification(BaseModel):
         INFO = "INFO"
 
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=64, unique=True, db_index=True, allow_unicode=True)
-    level = models.CharField(max_length=10, choices=NotificationLevel.choices, default=NotificationLevel.INFO)
-    category = models.ForeignKey(NotificationCategory, on_delete=models.CASCADE, related_name="notification")
+    slug = models.SlugField(max_length=64,
+                            unique=True,
+                            db_index=True,
+                            allow_unicode=True)
+    level = models.CharField(max_length=10,
+                             choices=NotificationLevel.choices,
+                             default=NotificationLevel.INFO)
+    category = models.ForeignKey(NotificationCategory,
+                                 on_delete=models.CASCADE,
+                                 related_name="notification")
 
     def __str__(self):
         return self.title
@@ -41,14 +52,22 @@ class NotificationOption(BaseModel):
 
 
 class UserNotification(BaseModel):
+
     class NotificationStatus(models.TextChoices):
         READ = "READ"
         UNREAD = "UNREAD"
 
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="notifications")
-    notification = models.ForeignKey(BaseNotification, on_delete=models.PROTECT, related_name="user")
-    status = models.CharField(max_length=6, choices=NotificationStatus.choices, default=NotificationStatus.UNREAD)
-    options = models.ManyToManyField(NotificationOption, related_name="user_notifications")
+    user = models.ForeignKey(get_user_model(),
+                             on_delete=models.CASCADE,
+                             related_name="notifications")
+    notification = models.ForeignKey(BaseNotification,
+                                     on_delete=models.PROTECT,
+                                     related_name="user")
+    status = models.CharField(max_length=6,
+                              choices=NotificationStatus.choices,
+                              default=NotificationStatus.UNREAD)
+    options = models.ManyToManyField(NotificationOption,
+                                     related_name="user_notifications")
 
     def __str__(self):
         return f"{self.user}"

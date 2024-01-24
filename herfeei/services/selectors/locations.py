@@ -2,7 +2,7 @@ from typing import List
 
 from django.db.models import QuerySet
 
-from herfeei.services.models import Province, City
+from herfeei.services.models import City, Province
 
 
 def get_provinces() -> List[QuerySet[Province]]:

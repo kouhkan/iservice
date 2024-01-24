@@ -7,14 +7,14 @@ from herfeei.dashboards.selectors.rules import get_rules
 
 
 class GetRulesView(APIView):
+
     class OutputRulesSerializer(serializers.ModelSerializer):
+
         class Meta:
             model = Rule
-            fields = (
-                "id", "title", "subtitle",
-                "details", "created_at", "updated_at",
-                "slug"
-            )
+            fields = ("id", "title", "subtitle", "details", "created_at",
+                      "updated_at", "slug")
 
     def get(self, request):
-        return Response(self.OutputRulesSerializer(get_rules(), many=True).data)
+        return Response(
+            self.OutputRulesSerializer(get_rules(), many=True).data)

@@ -3,10 +3,8 @@ from subprocess import check_output
 
 
 def get_new_toc():
-    new_toc = check_output(
-        'markdown-toc README.md',
-        shell=True
-    ).decode('utf-8')
+    new_toc = check_output('markdown-toc README.md',
+                           shell=True).decode('utf-8')
 
     pattern = ['<!-- toc -->', '', new_toc, '', '<!-- tocstop -->']
 
@@ -14,7 +12,7 @@ def get_new_toc():
 
 
 def get_readme():
-    with open('README.md', 'r') as f:
+    with open('README.md') as f:
         return f.read()
 
 

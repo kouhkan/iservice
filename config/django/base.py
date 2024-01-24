@@ -1,6 +1,6 @@
 import os
 
-from config.env import env, BASE_DIR
+from config.env import BASE_DIR, env
 
 env.read_env(os.path.join(BASE_DIR, ".env"))
 
@@ -29,15 +29,9 @@ LOCAL_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
-    'django_filters',
-    'django_celery_results',
-    'django_celery_beat',
-    'corsheaders',
-    'drf_spectacular',
-    'django_extensions',
-    'storages',
+    'rest_framework', 'rest_framework_simplejwt.token_blacklist',
+    'django_filters', 'django_celery_results', 'django_celery_beat',
+    'corsheaders', 'drf_spectacular', 'django_extensions', 'storages',
     'treebeard'
 ]
 
@@ -90,7 +84,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='psql://herfeei:herfeei@127.0.0.1:5432/herfeei'),
+    'default':
+    env.db('DATABASE_URL',
+           default='psql://herfeei:herfeei@127.0.0.1:5432/herfeei'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -111,16 +107,20 @@ if os.environ.get('GITHUB_WORKFLOW'):
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 AUTH_USER_MODEL = 'users.BaseUser'
@@ -146,12 +146,13 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'EXCEPTION_HANDLER': 'herfeei.api.exception_handlers.drf_default_with_modifications_exception_handler',
+    'DEFAULT_SCHEMA_CLASS':
+    'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER':
+    'herfeei.api.exception_handlers.drf_default_with_modifications_exception_handler',
     # 'EXCEPTION_HANDLER': 'herfeei.api.exception_handlers.hacksoft_proposed_exception_handler',
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ),
+    'DEFAULT_FILTER_BACKENDS':
+    ('django_filters.rest_framework.DjangoFilterBackend', ),
     'DEFAULT_AUTHENTICATION_CLASSES': []
 }
 
@@ -169,14 +170,14 @@ APP_DOMAIN = env("APP_DOMAIN", default="http://localhost:8000")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+from config.settings.celery import *  # noqa
 from config.settings.cors import *  # noqa
 from config.settings.jwt import *  # noqa
-from config.settings.sessions import *  # noqa
-from config.settings.celery import *  # noqa
-from config.settings.swagger import *  # noqa
-from config.settings.redis import *  # noqa
 from config.settings.minio import *  # noqa
+from config.settings.redis import *  # noqa
+from config.settings.sessions import *  # noqa
 from config.settings.sms import *  # noqa
+from config.settings.swagger import *  # noqa
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 

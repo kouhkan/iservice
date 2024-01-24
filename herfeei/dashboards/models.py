@@ -6,7 +6,10 @@ from herfeei.common.models import BaseModel
 class Rule(BaseModel):
     title = models.CharField(max_length=64)
     subtitle = models.CharField(max_length=128)
-    slug = models.SlugField(max_length=32, unique=True, allow_unicode=True, db_index=True)
+    slug = models.SlugField(max_length=32,
+                            unique=True,
+                            allow_unicode=True,
+                            db_index=True)
     details = models.TextField()
     status = models.BooleanField(default=True)
 
@@ -16,7 +19,10 @@ class Rule(BaseModel):
 
 class FaqCategory(BaseModel):
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=32, unique=True, db_index=True, allow_unicode=True)
+    slug = models.SlugField(max_length=32,
+                            unique=True,
+                            db_index=True,
+                            allow_unicode=True)
     icon = models.CharField(max_length=512, null=True, blank=True)
     status = models.BooleanField(default=True)
 
@@ -30,9 +36,14 @@ class FaqCategory(BaseModel):
 
 class Faq(BaseModel):
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=32, unique=True, db_index=True, allow_unicode=True)
+    slug = models.SlugField(max_length=32,
+                            unique=True,
+                            db_index=True,
+                            allow_unicode=True)
     details = models.TextField()
-    category = models.ForeignKey(FaqCategory, on_delete=models.CASCADE, related_name="faq")
+    category = models.ForeignKey(FaqCategory,
+                                 on_delete=models.CASCADE,
+                                 related_name="faq")
     status = models.BooleanField(default=True)
 
     def __str__(self):
@@ -41,8 +52,13 @@ class Faq(BaseModel):
 
 class Contact(BaseModel):
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=32, db_index=True, unique=True, allow_unicode=True)
-    icon = models.ImageField(upload_to="icons/contacts/", null=True, blank=True)
+    slug = models.SlugField(max_length=32,
+                            db_index=True,
+                            unique=True,
+                            allow_unicode=True)
+    icon = models.ImageField(upload_to="icons/contacts/",
+                             null=True,
+                             blank=True)
     content = models.CharField(max_length=128)
 
     def __str__(self):

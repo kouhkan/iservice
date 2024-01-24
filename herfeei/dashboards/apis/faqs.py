@@ -5,21 +5,24 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from herfeei.dashboards.models import Faq, FaqCategory
-from herfeei.dashboards.selectors.faqs import get_faq_categories, get_faqs, get_faq
+from herfeei.dashboards.selectors.faqs import (get_faq, get_faq_categories,
+                                               get_faqs)
 
 
 class FaqView(APIView):
+
     class FaqFilterSerializer(serializers.Serializer):
         slug = serializers.SlugField(max_length=32, required=False)
-        keyword = serializers.CharField(min_length=2, max_length=64, required=False)
+        keyword = serializers.CharField(min_length=2,
+                                        max_length=64,
+                                        required=False)
 
     class OutputFaqSerializer(serializers.ModelSerializer):
+
         class Meta:
             model = Faq
-            fields = (
-                "id", "title", "slug",
-                "details", "category", "created_at"
-            )
+            fields = ("id", "title", "slug", "details", "category",
+                      "created_at")
 
     @staticmethod
     def apply_filters(queryset, filters):
@@ -34,18 +37,19 @@ class FaqView(APIView):
         filter_serializer = self.FaqFilterSerializer(data=request.query_params)
         filter_serializer.is_valid(raise_exception=True)
         queryset = get_faqs()
-        queryset = self.apply_filters(queryset, filter_serializer.validated_data)
+        queryset = self.apply_filters(queryset,
+                                      filter_serializer.validated_data)
         return Response(self.OutputFaqSerializer(queryset, many=True).data)
 
 
 class FaqDetailView(APIView):
+
     class OutputFaqSerializer(serializers.ModelSerializer):
+
         class Meta:
             model = Faq
-            fields = (
-                "id", "title", "slug",
-                "details", "category", "created_at"
-            )
+            fields = ("id", "title", "slug", "details", "category",
+                      "created_at")
 
     @extend_schema(responses=OutputFaqSerializer)
     def get(self, request, slug):
@@ -55,11 +59,15 @@ class FaqDetailView(APIView):
 
 
 class FaqCategoriesView(APIView):
+
     class OutputFaqCategoriesSerializer(serializers.ModelSerializer):
+
         class Meta:
             model = FaqCategory
             fields = ("id", "title", "slug", "icon", "created_at")
 
     @extend_schema(responses=OutputFaqCategoriesSerializer)
     def get(self, request):
-        return Response(self.OutputFaqCategoriesSerializer(get_faq_categories(), many=True).data)
+        return Response(
+            self.OutputFaqCategoriesSerializer(get_faq_categories(),
+                                               many=True).data)

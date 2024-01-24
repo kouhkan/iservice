@@ -1,6 +1,6 @@
 from django.urls import path
 
-from herfeei.users.apis.profiles import ProfileView, GetUserAvatarsView
+from herfeei.users.apis.profiles import GetUserAvatarsView, ProfileView
 
 urlpatterns = [
     path("profile/", ProfileView.as_view(), name="profile"),

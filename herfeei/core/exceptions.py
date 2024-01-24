@@ -2,6 +2,7 @@ from rest_framework.exceptions import APIException
 
 
 class ApplicationError(Exception):
+
     def __init__(self, message, extra=None):
         super().__init__(message)
 
@@ -10,6 +11,7 @@ class ApplicationError(Exception):
 
 
 class DuplicateUsername(Exception):
+
     def __init__(self, message, extra=None):
         super().__init__(message)
 
@@ -18,6 +20,7 @@ class DuplicateUsername(Exception):
 
 
 class OrderTimeException(APIException):
+
     def __init__(self, message, extra=None):
         super().__init__(message)
         self.message = message
@@ -25,6 +28,7 @@ class OrderTimeException(APIException):
 
 
 class CompleteEmailProfileException(APIException):
+
     def __init__(self, message, extra=None):
         super().__init__(message)
         self.message = message
@@ -32,6 +36,7 @@ class CompleteEmailProfileException(APIException):
 
 
 class OwnerOfOrderException(APIException):
+
     def __init__(self, message, extra=None):
         super().__init__(message)
         self.message = message

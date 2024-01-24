@@ -15,4 +15,3 @@ ADD ./ /app/
 RUN chmod +x /app/docker/celery_entrypoint.sh
 RUN chmod +x /app/docker/beats_entrypoint.sh
 RUN chmod +x /app/docker/web_entrypoint.sh
-

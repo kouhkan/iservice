@@ -1,20 +1,33 @@
 from django.db import transaction
 from django.utils.text import slugify
 
-from herfeei.users.models import BaseUser, Address
+from herfeei.users.models import Address, BaseUser
 
 
 @transaction.atomic
-def create_address(*, user: BaseUser, title: str, details: str, default: bool = False, phone: str = None,
-                   lat: float = None, long: float = None) -> Address:
+def create_address(*,
+                   user: BaseUser,
+                   title: str,
+                   details: str,
+                   default: bool = False,
+                   phone: str = None,
+                   lat: float = None,
+                   long: float = None) -> Address:
     if default:
         Address.objects.filter(user=user).update(default=False)
-    return Address.objects.create(user=user, title=title, slug=slugify(title), details=details, default=default,
-                                  phone=phone, lat=lat, long=long)
+    return Address.objects.create(user=user,
+                                  title=title,
+                                  slug=slugify(title),
+                                  details=details,
+                                  default=default,
+                                  phone=phone,
+                                  lat=lat,
+                                  long=long)
 
 
 def update_address(*, user: BaseUser, address_id: int, **kwargs) -> bool:
-    if not (address := Address.objects.filter(user=user, id=address_id).first()):
+    if not (address := Address.objects.filter(user=user,
+                                              id=address_id).first()):
         return False
 
     for key, value in kwargs.items():
@@ -27,7 +40,8 @@ def update_address(*, user: BaseUser, address_id: int, **kwargs) -> bool:
 
 
 def delete_address(*, user: BaseUser, address_id: int) -> bool:
-    if not (address := Address.objects.filter(user=user, id=address_id).first()):
+    if not (address := Address.objects.filter(user=user,
+                                              id=address_id).first()):
         return False
     address.delete()
 
@@ -35,7 +49,8 @@ def delete_address(*, user: BaseUser, address_id: int) -> bool:
 
 
 def change_default_address(*, user: BaseUser, address_id: int) -> bool:
-    if not (address := Address.objects.filter(user=user, id=address_id).first()):
+    if not (address := Address.objects.filter(user=user,
+                                              id=address_id).first()):
         return False
 
     Address.objects.filter(user=user).update(default=False)

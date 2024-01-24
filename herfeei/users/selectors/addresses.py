@@ -2,7 +2,7 @@ from typing import List
 
 from django.db.models import QuerySet
 
-from herfeei.users.models import BaseUser, Address
+from herfeei.users.models import Address, BaseUser
 
 
 def get_user_addresses(*, user: BaseUser) -> List[QuerySet[Address]]:

@@ -8,9 +8,11 @@ from herfeei.common.models import BaseModel
 
 
 class BaseUserManager(BUM):
+
     def create_user(self, username, email=None, password=None):
         if not username:
-            raise ValueError(_("Users must have an username that username is phone number"))
+            raise ValueError(
+                _("Users must have an username that username is phone number"))
 
         user = self.model(username=username, email=self.normalize_email(email.lower())) \
             if email \
@@ -40,14 +42,24 @@ class BaseUserManager(BUM):
 
 
 class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
+
     class UserRole(models.TextChoices):
         ADMIN = "ADMIN"
         USER = "USER"
         EXPERT = "EXPERT"
 
-    username = models.CharField(_("Phone number"), max_length=10, unique=True, db_index=True)
-    email = models.EmailField(_("email address"), unique=True, db_index=True, null=True, blank=True)
-    role = models.CharField(max_length=9, choices=UserRole.choices, default=UserRole.USER)
+    username = models.CharField(_("Phone number"),
+                                max_length=10,
+                                unique=True,
+                                db_index=True)
+    email = models.EmailField(_("email address"),
+                              unique=True,
+                              db_index=True,
+                              null=True,
+                              blank=True)
+    role = models.CharField(max_length=9,
+                            choices=UserRole.choices,
+                            default=UserRole.USER)
 
     objects = BaseUserManager()
 
@@ -64,56 +76,81 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         return self.username
 
     class Meta:
-        unique_together = (
-            ("username", "email"),
-        )
+        unique_together = (("username", "email"), )
 
 
 class UserAvatar(BaseModel):
+
     class AvatarType(models.TextChoices):
         USER = "USER"
         EXPERT = "EXPERT"
 
     title = models.CharField(max_length=24, null=True, blank=True)
-    slug = models.SlugField(max_length=24, unique=True, db_index=True, allow_unicode=True, null=True, blank=True)
+    slug = models.SlugField(max_length=24,
+                            unique=True,
+                            db_index=True,
+                            allow_unicode=True,
+                            null=True,
+                            blank=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
-    type = models.CharField(max_length=6, choices=AvatarType.choices, default=AvatarType.USER)
+    type = models.CharField(max_length=6,
+                            choices=AvatarType.choices,
+                            default=AvatarType.USER)
 
     def __str__(self):
         return f"{self.id}"
 
 
 class Profile(BaseModel):
+
     class UserGender(models.TextChoices):
         MALE = "MALE"
         FEMALE = "FEMALE"
         OTHER = "OTHER"
 
-    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, related_name="profile")
-    avatar = models.ForeignKey(UserAvatar, on_delete=models.PROTECT, null=True, blank=True, related_name="profile")
+    user = models.OneToOneField(BaseUser,
+                                on_delete=models.CASCADE,
+                                related_name="profile")
+    avatar = models.ForeignKey(UserAvatar,
+                               on_delete=models.PROTECT,
+                               null=True,
+                               blank=True,
+                               related_name="profile")
     full_name = models.CharField(max_length=64, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=128, null=True, blank=True)
-    gender = models.CharField(max_length=9, choices=UserGender.choices, null=True, blank=True)
+    gender = models.CharField(max_length=9,
+                              choices=UserGender.choices,
+                              null=True,
+                              blank=True)
 
     def __str__(self):
         return f"{self.user}"
 
 
 class Address(BaseModel):
-    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name="addresses")
+    user = models.ForeignKey(BaseUser,
+                             on_delete=models.CASCADE,
+                             related_name="addresses")
     title = models.CharField(max_length=64)
-    slug = models.SlugField(max_length=64, unique=True, db_index=True, allow_unicode=True)
+    slug = models.SlugField(max_length=64,
+                            unique=True,
+                            db_index=True,
+                            allow_unicode=True)
     details = models.CharField(max_length=512)
     phone = models.CharField(max_length=10, null=True, blank=True)
     default = models.BooleanField(default=False)
-    lat = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    long = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lat = models.DecimalField(max_digits=9,
+                              decimal_places=6,
+                              null=True,
+                              blank=True)
+    long = models.DecimalField(max_digits=9,
+                               decimal_places=6,
+                               null=True,
+                               blank=True)
 
     class Meta:
-        unique_together = (
-            ("lat", "long"),
-        )
+        unique_together = (("lat", "long"), )
 
     def __str__(self):
         return f"{self.user}"

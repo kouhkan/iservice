@@ -3,13 +3,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from herfeei.api.mixins import ApiAuthMixin
-from herfeei.experts.selectors.experts import get_expert_samples, get_expert_complete_orders, get_expert_comments_count, \
-    get_expert_comments, get_expert_rate, get_expert
-from herfeei.experts.serializers.serializers import OutputExpertCommentsSerializer, OutputSampleExpertSerializer, \
-    OutputExpertSerializer
+from herfeei.experts.selectors.experts import (get_expert, get_expert_comments,
+                                               get_expert_comments_count,
+                                               get_expert_complete_orders,
+                                               get_expert_rate,
+                                               get_expert_samples)
+from herfeei.experts.serializers.serializers import (
+    OutputExpertCommentsSerializer, OutputExpertSerializer,
+    OutputSampleExpertSerializer)
 
 
 class ExpertProfileView(ApiAuthMixin, APIView):
+
     class OutputExpertProfileSerializer(serializers.Serializer):
         comments = OutputExpertCommentsSerializer(many=True)
         samples = OutputSampleExpertSerializer(many=True)
@@ -23,8 +28,10 @@ class ExpertProfileView(ApiAuthMixin, APIView):
         data["expert"] = get_expert(expert_code=expert_code)
         data["expert_rate"] = get_expert_rate(expert_code=expert_code)
         data["comments"] = get_expert_comments(expert_code=expert_code)
-        data["comment_count"] = get_expert_comments_count(expert_code=expert_code)
-        data["complete_order"] = get_expert_complete_orders(expert_code=expert_code)
+        data["comment_count"] = get_expert_comments_count(
+            expert_code=expert_code)
+        data["complete_order"] = get_expert_complete_orders(
+            expert_code=expert_code)
         data["samples"] = get_expert_samples(expert_code=expert_code)
         serializer = self.OutputExpertProfileSerializer(data)
         return Response(serializer.data)

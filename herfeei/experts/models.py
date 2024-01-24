@@ -19,18 +19,30 @@ def generate_expert_code(*, user: BaseUser) -> str:
 
 
 class Expert(BaseModel):
+
     class ExpertStatus(models.TextChoices):
         ACTIVE = "ACTIVE"
         BAN = "BAN"
 
-    expert_code = models.CharField(max_length=10, unique=True, db_index=True, null=True, blank=True)
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="expert")
+    expert_code = models.CharField(max_length=10,
+                                   unique=True,
+                                   db_index=True,
+                                   null=True,
+                                   blank=True)
+    user = models.OneToOneField(get_user_model(),
+                                on_delete=models.CASCADE,
+                                related_name="expert")
     province = models.ForeignKey("services.Province", on_delete=models.CASCADE)
     city = models.ForeignKey("services.City", on_delete=models.CASCADE)
-    license = models.ImageField(upload_to="experts/licenses/", null=True, blank=True)
+    license = models.ImageField(upload_to="experts/licenses/",
+                                null=True,
+                                blank=True)
     bad_background = models.BooleanField(default=False)
-    bad_background_license = models.ImageField(upload_to="experts/bad_backgrounds/", null=True, blank=True)
-    status = models.CharField(max_length=8, choices=ExpertStatus.choices, default=ExpertStatus.ACTIVE)
+    bad_background_license = models.ImageField(
+        upload_to="experts/bad_backgrounds/", null=True, blank=True)
+    status = models.CharField(max_length=8,
+                              choices=ExpertStatus.choices,
+                              default=ExpertStatus.ACTIVE)
 
     def __str__(self):
         return f"{self.user}"
@@ -42,7 +54,9 @@ class Expert(BaseModel):
 
 
 class ExpertSkill(BaseModel):
-    expert = models.OneToOneField(Expert, on_delete=models.CASCADE, related_name="skills")
+    expert = models.OneToOneField(Expert,
+                                  on_delete=models.CASCADE,
+                                  related_name="skills")
     category = models.ManyToManyField("services.ServiceCategory")
 
     def __str__(self):
@@ -50,7 +64,9 @@ class ExpertSkill(BaseModel):
 
 
 class AvailableTimeExpert(BaseModel):
-    expert = models.ForeignKey(Expert, on_delete=models.CASCADE, related_name="available")
+    expert = models.ForeignKey(Expert,
+                               on_delete=models.CASCADE,
+                               related_name="available")
     start_time = models.TimeField(default=timezone.now)
     end_time = models.TimeField(default=timezone.now)
     date = models.DateField(default=timezone.now)
@@ -60,7 +76,9 @@ class AvailableTimeExpert(BaseModel):
 
 
 class Warranty(BaseModel):
-    expert = models.OneToOneField(Expert, on_delete=models.CASCADE, related_name="warranty")
+    expert = models.OneToOneField(Expert,
+                                  on_delete=models.CASCADE,
+                                  related_name="warranty")
 
     class Meta:
         verbose_name_plural = "Warranties"
@@ -70,8 +88,11 @@ class Warranty(BaseModel):
 
 
 class Sample(BaseModel):
-    expert = models.ForeignKey(Expert, on_delete=models.CASCADE, related_name="samples")
-    category = models.ForeignKey("services.ServiceCategory", on_delete=models.CASCADE)
+    expert = models.ForeignKey(Expert,
+                               on_delete=models.CASCADE,
+                               related_name="samples")
+    category = models.ForeignKey("services.ServiceCategory",
+                                 on_delete=models.CASCADE)
     image = models.ImageField(upload_to="experts/samples/")
     description = models.CharField(max_length=2000)
 
@@ -80,13 +101,13 @@ class Sample(BaseModel):
 
 
 class Bookmark(BaseModel):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="bookmark")
+    user = models.ForeignKey(get_user_model(),
+                             on_delete=models.CASCADE,
+                             related_name="bookmark")
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = (
-            ("user", "expert"),
-        )
+        unique_together = (("user", "expert"), )
 
     def __str__(self):
         return f"{self.user}"

@@ -7,5 +7,3 @@ def get_user_by_username(*, username: str) -> BaseUser:
 
 def get_user_by_email(*, email: str) -> BaseUser:
     return BaseUser.objects.filter(email=email).first()
-
-

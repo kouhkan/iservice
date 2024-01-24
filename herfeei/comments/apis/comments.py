@@ -8,6 +8,7 @@ from herfeei.comments.services.comments import create_comment
 
 
 class CreateCommentView(ApiAuthMixin, APIView):
+
     class InputCommentSerializer(serializers.Serializer):
         rate = serializers.IntegerField(min_value=1, max_value=5)
         description = serializers.CharField(min_length=2, max_length=512)
@@ -29,6 +30,7 @@ class CreateCommentView(ApiAuthMixin, APIView):
         serializer = self.InputCommentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if not (comment := create_comment(**serializer.validated_data)):
-            return Response({"msg": "order is not complete"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(self.OutputCommentSerializer(comment).data, status=status.HTTP_201_CREATED)
-       
+            return Response({"msg": "order is not complete"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        return Response(self.OutputCommentSerializer(comment).data,
+                        status=status.HTTP_201_CREATED)

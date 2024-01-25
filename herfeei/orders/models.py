@@ -12,6 +12,10 @@ def generate_track_token() -> str:
 
 
 class Order(BaseModel):
+    class OrderStatus(models.TextChoices):
+        CREATED = "CREATED"
+        NOTIFIED = "NOTIFIED"
+
     user_answer = models.ForeignKey("services.UserAnswer",
                                     on_delete=models.CASCADE,
                                     related_name="order")
@@ -51,6 +55,7 @@ class Order(BaseModel):
                                      related_name="orders",
                                      null=True,
                                      blank=True)
+    status = models.CharField(max_length=10, choices=OrderStatus.choices, default=OrderStatus.CREATED)
 
     def __str__(self):
         return f"{self.user_answer.user}"

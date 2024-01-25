@@ -7,12 +7,12 @@ from herfeei.authentication.tasks import send_sms_task
 from herfeei.authentication.utils.redis_layer import (
     check_authentication_token, cleanup_token, get_auth_prepration_wait_time,
     prepare_authentication_token)
+from herfeei.notifications.services.users import notification_user_created
 from herfeei.users.models import BaseUser
 from herfeei.users.services.users import register
 
 
 class LoginByUsernameView(APIView):
-
     class InputLoginSerializer(serializers.Serializer):
         username = serializers.CharField(min_length=10, max_length=10)
 
@@ -33,7 +33,6 @@ class LoginByUsernameView(APIView):
 
 
 class VerifyAuthenticationView(APIView):
-
     class InputVerifyAuthenticationSerializer(serializers.Serializer):
         username = serializers.CharField(min_length=10, max_length=10)
         token = serializers.CharField(min_length=6, max_length=6)
@@ -71,6 +70,8 @@ class VerifyAuthenticationView(APIView):
         try:
             user = register(username=serializer.validated_data.get("username"))
             cleanup_token(serializer.validated_data.get("username"))
+            # Create a welcome notification for new user
+            notification_user_created(user=user)
         except Exception as ex:
             return Response(f"Database Error {ex}",
                             status=status.HTTP_400_BAD_REQUEST)

@@ -20,7 +20,6 @@ class NotificationCategory(MP_Node, BaseModel):
 
 
 class BaseNotification(BaseModel):
-
     class NotificationLevel(models.TextChoices):
         DANGER = "DANGER"
         SUCCESS = "SUCCESS"
@@ -52,7 +51,6 @@ class NotificationOption(BaseModel):
 
 
 class UserNotification(BaseModel):
-
     class NotificationStatus(models.TextChoices):
         READ = "READ"
         UNREAD = "UNREAD"

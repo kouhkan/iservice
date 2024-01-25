@@ -11,8 +11,12 @@ from herfeei.orders.services.orders import create_order
 
 
 class UserOrderView(ApiAuthMixin, APIView):
-
     class InputOrderSerializer(serializers.ModelSerializer):
+        class ForOtherSerializer(serializers.Serializer):
+            username = serializers.CharField(min_length=10, max_length=10)
+            fullname = serializers.CharField(min_length=3, max_length=64)
+
+        for_other = ForOtherSerializer(required=False)
 
         class Meta:
             model = Order
@@ -25,7 +29,7 @@ class UserOrderView(ApiAuthMixin, APIView):
                 raise OrderTimeException("User must choose a date for order")
 
             if attrs.get("email_order"):
-                if not attrs.get("user_answer").user.profile.email:
+                if not attrs.get("user_answer").user.email:
                     raise CompleteEmailProfileException(
                         "User must set email in profile")
 
@@ -48,7 +52,6 @@ class UserOrderView(ApiAuthMixin, APIView):
         serializer = self.InputOrderSerializer(data=request.data,
                                                context={"request": request})
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data.get("order_date_time"))
         order = create_order(
             user_answer=serializer.validated_data.get("user_answer"),
             order_date_time=serializer.validated_data.get("order_date_time"),

@@ -1,7 +1,7 @@
 from herfeei.users.models import BaseUser, Profile
 
 
-def for_other(*, username: str, full_name: str) -> BaseUser:
+def for_other_order(*, username: str, full_name: str) -> BaseUser:
     user, created = BaseUser.objects.get_or_create(
         username=username, defaults={"username": username})
     if created:

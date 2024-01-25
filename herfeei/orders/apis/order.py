@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from herfeei.api.mixins import ApiAuthMixin
 from herfeei.core.exceptions import (CompleteEmailProfileException,
                                      OrderTimeException, OwnerOfOrderException)
+from herfeei.notifications.services.orders import notification_order_created
 from herfeei.orders.models import Order
 from herfeei.orders.services.orders import create_order
 
@@ -64,5 +65,9 @@ class UserOrderView(ApiAuthMixin, APIView):
             email_order=serializer.validated_data.get("email_order"),
             for_other=serializer.validated_data.get("for_other"),
         )
+
+        # Create a notification for new order
+        notification_order_created(order=order)
+
         return Response(self.OutputOrderSerializer(order).data,
                         status=status.HTTP_201_CREATED)

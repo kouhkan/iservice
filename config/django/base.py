@@ -26,6 +26,7 @@ LOCAL_APPS = [
     'herfeei.experts.apps.ExpertsConfig',
     'herfeei.discounts.apps.DiscountsConfig',
     'herfeei.orders.apps.OrdersConfig',
+    'herfeei.medias.apps.MediasConfig',
 ]
 
 THIRD_PARTY_APPS = [
